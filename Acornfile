@@ -1,4 +1,7 @@
 args: {
+  credits: "Dylan Kenneth Eliot
+
+stripped for demonstration and templating purposes with the Acorn.io binary."
 }
 
 containers: {
