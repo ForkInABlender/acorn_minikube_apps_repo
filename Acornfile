@@ -1,0 +1,13 @@
+args: {
+}
+
+containers: {
+  app: {
+    build: "."
+    env: {
+      if args.dev { "FLASK_ENV": "development" }
+    }
+    if args.dev { dirs: "/app": "./" }
+    ports: publish: "5000/http"
+  }
+}
