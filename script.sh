@@ -13,5 +13,8 @@ acorn install --ingress-class-name nginx
 #
 acorn build .
 acorn run .
+#check your application is running
 acorn apps
+#Doubly check that the ingress controller is doing the right thing during IP & domain name assignment, as well as CLASS assignment for the
+# controller..... Checking this during a point of failure may help diagnose the problem of what's mismapping...
 kubectl get ingress --all-namespaces
