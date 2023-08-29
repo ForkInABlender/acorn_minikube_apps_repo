@@ -1,0 +1,70 @@
+args{
+  MOTD: "This is an example of taking yaml for kubernetes and turning it into permissions for containers and clusters within a acorn file."
+}
+containers: {
+        api: {
+            permissions: {
+                rules: [{
+                        verbs: ["get", "list", "watch"],
+                        apiGroups: [""],
+                        resources: ["nodes"]
+                    },{
+                        verbs: ["get", "list", "watch"],
+                        apiGroups: ["networking.k8s.io"],
+                        resources: ["ingressclasses"]
+                    },{
+                        verbs: ["create"],
+                        apiGroups: ["authorization.k8s.io"],
+                        resources: ["subjectaccessreviews"]
+                    },{
+                        verbs: ["get", "list", "watch"],
+                        apiGroups: ["storage.k8s.io"],
+                        resources: ["storageclasses"]
+                    }
+                ],
+                clusterRules: [{
+                        verbs: ["*"],
+                        apiGroups: ["api.acorn.io", "internal.acorn.io", "admin.acorn.io", "internal.admin.acorn.io"],
+                        resources: ["*"]
+                    },{
+                        verbs: ["*"],
+                        apiGroups: [''],
+                        resources: ["pods", "pods/exec", "pods/log", "pods/portforward", "pods/ephemeralcontainers", "configmaps", "secrets", "namespaces", "services", "endpoints", "serviceaccounts", "persistentvolumes", "persistentvolumeclaims"]
+                    },
+                    {
+                        verbs: ["*"],
+                        apiGroups: ["apiextensions.k8s.io"],
+                        resources: ["customresourcedefinitions"]
+                    },{
+                        verbs": ["*"],
+                        apiGroups": ["apiregistration.k8s.io"],
+                        resources": ["apiservices"]
+                    },{
+                        verbs: ["*"],
+                        apiGroups: ["networking.k8s.io"],
+                        resources: ["ingresses", "networkpolicies"]
+                    },{
+                        verbs: ["*"],
+                        apiGroups: ["batch"],
+                        resources: ["jobs", "cronjobs"]
+                    },{
+                        verbs: ["*"],
+                        apiGroups: ["apps"],
+                        resources: [ "deployments", "daemonsets", "replicasets"]
+                    },{
+                        verbs: ["*"],
+                        apiGroups: ["rbac.authorization.k8s.io"],
+                        resources: ["clusterroles", "roles", "clusterrolebindings", "rolebindings"]
+                    },{
+                        verbs: ["*"],
+                        apiGroups: ["coordination.k8s.io"],
+                        resources: ["leases"]
+                    },{
+                        verbs: ["*"],
+                        apiGroups: ["policy"],
+                        resources: ["poddisruptionbudgets"]
+                    }]
+            }
+        }
+    }
+}
