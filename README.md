@@ -12,4 +12,4 @@ The files collectively describe a Flask application that simply returns "hello" 
 
 # Templating from this setup other web apps:
 
-Feel free to temlate from this and the notes for the docker image [here](https://hub.docker.com/r/de3343/flask_acorn_app), which might give you some insight into how the app was built.
+Feel free to template from this and the notes for the docker image [here](https://hub.docker.com/r/de3343/flask_acorn_app), which might give you some insight into how the app was built.
