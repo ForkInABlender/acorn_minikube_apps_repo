@@ -1,20 +1,39 @@
 #Dylan Kenneth Eliot
 #
-#Configure minikube for custom runtime
-minikube start --container-runtime=containerd
-#Return if it times out on enabling...
+minikube start --container-runtime=docker --driver=docker
 minikube addons enable ingress
-#same for acorn.....
 acorn install --ingress-class-name nginx
-#build & run the app
-#
-#Make sure that you run  'minikube tunnel' before you build and run in a separate terminal window. This will allow the ingress controller to assign
-# a domain name with an ip...
-#
+echo """
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+- role: worker
+""" > kind-config.yaml
+kind create cluster cluster --config kind-config.yaml
+kubectl config use-context minikube
+kubectl get pods --all-namespaces -o yaml > pods.yaml
+kubectl get namespaces --all-namespaces -o yaml > namespaces.yaml
+kubectl get deployments --all-namespaces -o yaml > deployments.yaml
+kubectl get secrets --all-namespaces -o yaml > secrets.yaml
+kubectl get pods --all-namespaces -o json | jq '.items[].metadata.annotations' > pod_annotations.json
+kubectl get services --all-namespaces -o yaml > services.yaml
+kubectl get configmaps --all-namespaces -o yaml > configmaps.yaml
+
+kubectl config use-context kind-kind
+
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/cloud/deploy.yaml
+kubectl apply -f namespaces.yaml
+kubectl apply -f services.yaml
+kubectl apply -f deployments.yaml
+kubectl apply -f pods.yaml
+cat pod_annotations.json | jq -r 'to_entries[] | "\(.key) \(.value | to_entries[] | "\(.key)=\(.value)")"' | while read pod annotations; do
+    kubectl annotate pods $pod $annotations --overwrite
+done
+kubectl apply -f configmaps.yaml
+acorn install --ingress-class-name nginx
+minikube delete
 acorn build .
 acorn run .
-#check your application is running
 acorn apps
-#Doubly check that the ingress controller is doing the right thing during IP & domain name assignment, as well as CLASS assignment for the
-# controller..... Checking this during a point of failure may help diagnose the problem of what's mismapping...
 kubectl get ingress --all-namespaces
