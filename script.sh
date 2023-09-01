@@ -44,5 +44,6 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main
 acorn install --ingress-class-name nginx
 acorn build .
 acorn run .
-acorn apps
-kubectl get ingress --all-namespaces
+ngrok http 5000 # sets ngrok to listen to anything mapped on the localhost port 5000
+#acorn apps
+#kubectl get ingress --all-namespaces
