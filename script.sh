@@ -14,7 +14,8 @@ acorn install --ingress-class-name nginx
 acorn build .
 acorn run .
 #check your application is running
-acorn apps
+#acorn apps
 #Doubly check that the ingress controller is doing the right thing during IP & domain name assignment, as well as CLASS assignment for the
 # controller..... Checking this during a point of failure may help diagnose the problem of what's mismapping...
-kubectl get ingress --all-namespaces
+#kubectl get ingress --all-namespaces
+ngrok http 5000 # sets ngrok to listen to anything mapped on the localhost port 5000
