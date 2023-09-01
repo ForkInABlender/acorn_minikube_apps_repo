@@ -40,6 +40,7 @@ nodes:
 
 """ > kind-config.yaml
 kind create cluster cluster --config kind-config.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 acorn install --ingress-class-name nginx
 acorn build .
 acorn run .
