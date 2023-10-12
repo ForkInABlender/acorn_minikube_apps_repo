@@ -1,49 +1,21 @@
 #Dylan Kenneth Eliot
 #
 echo """
-https://chat.openai.com/share/f61405ef-a70c-4e4a-b8c3-e81b0ed1767d
+This was given to me by an engineer who built the tool "acorn" who also uses k3d, k3s, and acorn.
 
-Refer to the above link for debugging purposes. Even for running in docker rootless mode.
-This helped with figuring out how to stand it up locally. One way in minikube and one way in kind.
+This targets traefik instead of the standard nginx-ingress controller.
 
-Use with ngrok, selenium webdriver, a install of google-chrome, and credentials needed to login to
- cloudflare. You can practically automate the process. With tmux, it will run in the background.
-  The URLs are temporary with ngrok.
 """
 
+k3d cluster create # do this in a seperate tab from below unless the line returns a normal response
+# waiting to run the next command. ..... tmux may also help for this as a temporary fix...
 
-echo """
-# kind-config.yaml
-kind: Cluster
-apiVersion: kind.x-k8s.io/v1alpha4
-nodes:
-- role: control-plane
-  kubeadmConfigPatches:
-  - |
-    kind: InitConfiguration
-    nodeRegistration:
-      kubeletExtraArgs:
-        node-labels: "ingress-ready=true"
-  extraPortMappings:
-  - containerPort: 80
-    hostPort: 80
-    protocol: TCP
-  - containerPort: 443
-    hostPort: 443
-    protocol: TCP
-  - containerPort: 5000
-    hostPort: 5000
-    protocol: TCP
-  - containerPort: 8080
-    hostPort: 8080
-    protocol: TCP
+curl -sfL https://get.k3s.io | bash
+mkdir ~/.kube -p
+sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/config && sudo chown $USER ~/.kube/config
+sudo chmod 600 ~/.kube/config && export KUBECONFIG=~/.kube/config
 
-""" > kind-config.yaml
-kind create cluster --config kind-config.yaml
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
-acorn install --ingress-class-name nginx
-acorn build .
-acorn run .
-ngrok http 5000 # sets ngrok to listen to anything mapped on the localhost port 5000
+
+
 #acorn apps
 #kubectl get ingress --all-namespaces
